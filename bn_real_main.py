@@ -55,7 +55,8 @@ def on_open(ws):
                 "flokiusdt@kline_1m",
                 "wldusdt@kline_1m",
                 "fetusdt@kline_1m",
-                "agixusdt@kline_1m"
+                "agixusdt@kline_1m",
+                "arkmusdt@kline_1m"
             ],
         "id": 1
     }

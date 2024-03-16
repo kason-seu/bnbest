@@ -32,7 +32,7 @@ class Strategy:
 
         # send_dingtalk_message(message=f"coin={coin}, real_time={event_time}, open_price={open_price}, close_price={close_price}, "
         #     f"upper_ratio={upper_ratio_percentage}, lower_ratio={lower_ratio_percentage}")
-        if (open_price > close_price) and (lower_ratio < -0.01):
+        if (open_price > close_price) and (lower_ratio < -0.012):
             logger.info(
                 f"触发了下界条件是lower_ratio < -0.01,启动购买操作,coin={coin}, real_time={event_time}, "
                 f"lower_ratio={lower_ratio_percentage}, "
@@ -40,11 +40,12 @@ class Strategy:
             print(f"触发了下界条件是lower_ratio < -0.01,启动购买操作,coin={coin}, real_time={event_time}, "
                 f"lower_ratio={lower_ratio_percentage}, "
                 f"open_price={open_price}, close_price={close_price}")
+            bn_op.buy_crypto_by_limit(client=self.client, symbol=coin, quantity=quantity, price=close_price)
             send_dingtalk_message(message=f"触发了下界条件是lower_ratio < -0.01,启动购买操作,coin={coin}, real_time={event_time}, "
                                           f"lower_ratio={lower_ratio_percentage}, "
                                           f"open_price={open_price}, close_price={close_price}")
 
-        if (open_price < close_price) and (upper_ratio > 0.01):
+        if (open_price < close_price) and (upper_ratio > 0.012):
             logger.info(
                 f"触发了上界条件是upper_ratio > 0.01,启动售卖操作,coin={coin}, real_time={event_time}, "
                 f"upper_ratio={upper_ratio_percentage}, "
@@ -52,6 +53,7 @@ class Strategy:
             print(f"触发了上界条件是upper_ratio > 0.01,启动售卖操作,coin={coin}, real_time={event_time}, "
                 f"upper_ratio={upper_ratio_percentage}, "
                 f"open_price={open_price}, close_price={close_price}")
+            bn_op.sell_crypto_by_usdt_limit(client=self.client, symbol=coin, usdt_amount=10, sell_price=close_price)
             send_dingtalk_message(message=f"触发了上界条件是upper_ratio > 0.01,启动售卖操作,coin={coin}, real_time={event_time}, "
                                           f"upper_ratio={upper_ratio_percentage}, "
                                           f"open_price={open_price}, close_price={close_price}")

@@ -8,7 +8,7 @@ logger = realtime_logger.get_logger()
 
 
 def on_message(ws, message):
-    logger.info(f"Received Message:")
+    #logger.info(f"Received Message:")
     message_json = json.loads(message)
     kline = message_json['k']
 
@@ -27,7 +27,7 @@ def on_message(ws, message):
         is_kline_closed=kline['x']
     )
     coin = kline_data.symbol
-    logger.info(f"coin = {coin}, kline data = {kline_data}")
+    #logger.info(f"coin = {coin}, kline data = {kline_data}")
     strategy = Strategy(kline_data)
     strategy.handle()
 

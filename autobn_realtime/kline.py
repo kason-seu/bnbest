@@ -1,4 +1,4 @@
-import bnutils
+from autobn_realtime import bnutils
 class KlineData:
     def __init__(self, event_type, event_time, symbol, start_time, end_time, open_price, close_price, high_price, low_price, volume, number_of_trades, is_kline_closed):
         self.event_type = event_type  # 事件类型

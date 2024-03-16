@@ -1,7 +1,7 @@
 from my_loggers import strategy_logger
 
 logger = strategy_logger.get_logger()
-from dingding_robot import send_dingtalk_message
+from autobn_realtime.dingding_robot import send_dingtalk_message
 from coin_core import binance_client
 from autobn_realtime import bn_op
 from autobn_realtime import bnutils

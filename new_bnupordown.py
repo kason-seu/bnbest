@@ -27,7 +27,7 @@ class RateLimiter:
             if len(self.timestamps) >= self.calls:
                 earliest = self.timestamps[0]
                 sleep_time = self.period - (current_time - earliest)
-                print(f"RateLimiter: Waiting for {sleep_time:.2f} seconds")
+                #print(f"RateLimiter: Waiting for {sleep_time:.2f} seconds")
                 time.sleep(sleep_time)
 
             self.timestamps.append(time.time())  # 添加新的时间戳

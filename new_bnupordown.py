@@ -65,20 +65,27 @@ def on_message(ws, message):
         coin = message['s']
         price_change_percent = float(message['P'])
 
-        print(f"下跌警告！{coin} 24小时涨跌幅已达 {price_change_percent}%")
-        if price_change_percent <= -1:
-            alert_message = f"下跌警告！{coin} 24小时涨跌幅已达 {price_change_percent}%"
+        if price_change_percent <= -20:
+            alert_message = f"下跌警告下跌超过20%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
             q.put(alert_message)  # 将消息放入队列
-
-        elif price_change_percent > 5:
-            alert_message = f"很棒666！{coin} 24小时涨跌幅已达 {price_change_percent}%"
+        elif price_change_percent <= -10:
+            alert_message = f"下跌警告下跌超过20%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
+            q.put(alert_message)  # 将消息放入队列
+        elif price_change_percent >= 10:
+            alert_message = f"很棒666,上涨超过10%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
+            logger.info(alert_message)
+            q.put(alert_message)  # 将消息放入队列
+        elif price_change_percent >= 5:
+            alert_message = f"很棒666,上涨超过5%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
+            logger.info(alert_message)
+            q.put(alert_message)  # 将消息放入队列
 
 
 def start_thread_pool(q):
     num_worker_threads = 1
-    limiter = RateLimiter(20, 60)  # 20 calls per minute
+    limiter = RateLimiter(20, 300)  # 20 calls per minute
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_worker_threads) as executor:
         for _ in range(num_worker_threads):
             executor.submit(send_dingtalk_message, q, limiter)
@@ -103,7 +110,7 @@ def on_open(ws):
 
 
 if __name__ == "__main__":
-    websocket.enableTrace(True)
+    websocket.enableTrace(False)
     ws = websocket.WebSocketApp("wss://stream.binance.com:9443/ws",
                                 on_message=on_message,
                                 on_error=on_error,

@@ -43,7 +43,6 @@ def send_dingtalk_message(q, limiter):
 
         limiter.wait()  # 等待符合频率限制
 
-        webhook_url = "你的钉钉机器人Webhook URL"
         headers = {"Content-Type": "application/json; charset=utf-8"}
         data = {
             "msgtype": "text",

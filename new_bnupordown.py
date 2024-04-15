@@ -65,6 +65,7 @@ def on_message(ws, message):
         coin = message['s']
         price_change_percent = float(message['P'])
 
+        print(f"下跌警告！{coin} 24小时涨跌幅已达 {price_change_percent}%")
         if price_change_percent <= -2:
             alert_message = f"下跌警告！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)

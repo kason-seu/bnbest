@@ -65,7 +65,7 @@ def send_dingtalk_message(q, limiter):
 
 def on_message(ws, message):
     message = json.loads(message)
-    print(message)
+
     if 'e' in message and message['e'] == '24hrTicker' and 'P' in message and 's' in message:
         coin = message['s']
         price_change_percent = float(message['P'])
@@ -90,7 +90,7 @@ def on_message(ws, message):
 
 def start_thread_pool(q):
     num_worker_threads = 1
-    limiter = RateLimiter(20, 300)  # 20 calls per minute
+    limiter = RateLimiter(15, 300)  # 20 calls per minute
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_worker_threads) as executor:
         for _ in range(num_worker_threads):
             executor.submit(send_dingtalk_message, q, limiter)

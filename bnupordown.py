@@ -12,7 +12,7 @@ def on_message(ws, message):
         price_change_percent = float(message['P'])
         if price_change_percent <= -0.01:  # 检测是否下跌超过10%
             alert_message = f"警告！{coin} 24小时涨跌幅已达 {message['P']}%"
-            send_dingtalk_message(alert_message)
+            send_dingtalk_message(message=alert_message)
 
         if price_change_percent <= -0.01:  # 检测是否下跌超过10%
             alert_message = f"警告！{coin} 24小时涨跌幅已达 {message['P']}%"

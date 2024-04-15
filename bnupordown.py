@@ -7,7 +7,7 @@ logger = upordown_logger.get_logger()
 def on_message(ws, message):
     message = json.loads(message)
     # 检查是否为24小时价格统计数据
-    if 'e' in message and message['e'] == '24hrTicker':
+    if 'e' in message and message['e'] == '24hrTicker' and 'P' in message and 's' in message:
         coin = message['s']
         price_change_percent = float(message['P'])
         if price_change_percent <= -0.01:  # 检测是否下跌超过10%

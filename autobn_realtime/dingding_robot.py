@@ -4,6 +4,9 @@ import json
 
 # 钉钉机器人的Webhook URL
 webhook_url = "https://oapi.dingtalk.com/robot/send?access_token=f4c5ef131c67548e699c5b2642503b4fcef14f3a23a032921e1ab32cfbbc5eb6"
+
+@sleep_and_retry
+@limits(calls=20, period=60)
 def send_dingtalk_message(webhook_url = webhook_url, message=None):
     # 构造请求数据
     headers = {"Content-Type": "application/json ;charset=utf-8"}

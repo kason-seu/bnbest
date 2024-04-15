@@ -4,7 +4,7 @@ import concurrent.futures
 import queue
 import requests
 import time
-from threading import Lock
+from threading import Lock, Thread
 from my_loggers import upordown_logger
 
 logger = upordown_logger.get_logger()
@@ -77,13 +77,12 @@ def on_message(ws, message):
             logger.info(alert_message)
 
 
-def start_thread_pool():
+def start_thread_pool(q):
     num_worker_threads = 1
     limiter = RateLimiter(20, 60)  # 20 calls per minute
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_worker_threads) as executor:
-        # 启动线程池处理消息
-        futures = [executor.submit(send_dingtalk_message, q, limiter) for _ in range(num_worker_threads)]
-        concurrent.futures.wait(futures)  # 等待所有线程完成
+        for _ in range(num_worker_threads):
+            executor.submit(send_dingtalk_message, q, limiter)
 
 
 def on_error(ws, error):
@@ -111,6 +110,8 @@ if __name__ == "__main__":
                                 on_error=on_error,
                                 on_close=on_close)
     ws.on_open = on_open
-    # 在另一个线程中运行WebSocket客户端以保持主线程不阻塞
-    start_thread_pool()  # 启动线程池
-    ws.run_forever()  # 运行WebSocket客户端
+    # Use a separate thread to run the WebSocket client to avoid blocking the main thread
+    thread = Thread(target=lambda: ws.run_forever())
+    thread.start()
+    start_thread_pool(q)  # 启动线程池
+    thread.join()  # 等待WebSocket线程结束

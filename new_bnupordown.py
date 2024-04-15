@@ -20,20 +20,17 @@ class RateLimiter:
 
     def wait(self):
         with self.mtx:
-            while True:
-                current_time = time.time()
-                if len(self.timestamps) < self.calls:
-                    self.timestamps.append(current_time)
-                    break
-                else:
-                    earliest = self.timestamps[0]  # get the earliest time
-                    if current_time - earliest > self.period:
-                        self.timestamps.pop(0)  # remove the earliest time
-                    else:
-                        time_to_wait = self.period - (current_time - earliest)
-                        time.sleep(time_to_wait)  # wait enough time
-                self.timestamps.append(current_time)  # ensure adding the timestamp after waiting
+            current_time = time.time()
+            # 清理超出时间窗口的时间戳
+            self.timestamps = [t for t in self.timestamps if current_time - t < self.period]
 
+            if len(self.timestamps) >= self.calls:
+                earliest = self.timestamps[0]
+                sleep_time = self.period - (current_time - earliest)
+                print(f"RateLimiter: Waiting for {sleep_time:.2f} seconds")
+                time.sleep(sleep_time)
+
+            self.timestamps.append(time.time())  # 添加新的时间戳
 
 
 webhook_url = "https://oapi.dingtalk.com/robot/send?access_token" \

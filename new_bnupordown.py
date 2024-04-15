@@ -61,12 +61,13 @@ def send_dingtalk_message(q, limiter):
 
 def on_message(ws, message):
     message = json.loads(message)
+    print(message)
     if 'e' in message and message['e'] == '24hrTicker' and 'P' in message and 's' in message:
         coin = message['s']
         price_change_percent = float(message['P'])
 
         print(f"下跌警告！{coin} 24小时涨跌幅已达 {price_change_percent}%")
-        if price_change_percent <= -2:
+        if price_change_percent <= -1:
             alert_message = f"下跌警告！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
             q.put(alert_message)  # 将消息放入队列
@@ -77,7 +78,7 @@ def on_message(ws, message):
 
 
 def start_thread_pool():
-    num_worker_threads = 2
+    num_worker_threads = 1
     limiter = RateLimiter(20, 60)  # 20 calls per minute
     with concurrent.futures.ThreadPoolExecutor(max_workers=num_worker_threads) as executor:
         # 启动线程池处理消息

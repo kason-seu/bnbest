@@ -49,17 +49,15 @@ def on_open(ws):
         "method": "SUBSCRIBE",
         "params":
             [
-                "bnbusdt@kline_15m",
-                # "ethusdt@kline_15m",
-                # "btcusdt@kline_15m",
-                # "pepeusdt@kline_15m",
-                # "flokiusdt@kline_15m",
-                # "wldusdt@kline_15m",
-                # "fetusdt@kline_15m",
-                # "agixusdt@kline_15m",
-                # "arkmusdt@kline_15m"
+                "ethusdt@kline_15m",
+                "btcusdt@kline_15m",
+                "pepeusdt@kline_15m",
+                "flokiusdt@kline_15m",
+                "wldusdt@kline_15m",
+                "fetusdt@kline_15m",
+                "arkmusdt@kline_15m"
             ],
-        "id": 2
+        "id": 3
     }
     ws.send(json.dumps(param))
 

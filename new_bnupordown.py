@@ -123,7 +123,7 @@ def on_open(ws):
     logger.info("WebSocket connection opened.")
     # 订阅多个交易对
     ws.send(json.dumps({'method': 'SUBSCRIBE',
-                        'params': ['btcusdt@ticker', 'ethusdt@ticker', 'pepeusdt@ticker', 'arkmusdt@ticker', 'fetusdt@ticker','flokiusdt@ticker'
+                        'params': ['btcusdt@ticker', 'ethusdt@ticker', 'pepeusdt@ticker', 'arkmusdt@ticker', 'fetusdt@ticker','flokiusdt@ticker',
                                    'wldusdt@ticker'], 'id': 111}))
 
 

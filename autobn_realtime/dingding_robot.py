@@ -50,5 +50,5 @@ def send_dingtalk_message(webhook_url = webhook_url, message=None):
     # 发送POST请求
     response = requests.post(webhook_url, data=json.dumps(data), headers=headers)
     # 打印响应结果
-    #print(response.text)
+    print(response.text)
 

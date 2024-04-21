@@ -6,31 +6,58 @@ import requests
 import time
 from threading import Lock, Thread
 from my_loggers import upordown_logger
+from collections import deque
 
 logger = upordown_logger.get_logger()
-q = queue.Queue()
+
+
+def create_bounded_queue(maxsize):
+    return queue.Queue(maxsize=maxsize)
+
+
+def add_to_queue(q, item):
+    try:
+        q.put_nowait(item)  # 使用put_nowait来避免阻塞
+    except queue.Full:
+        logger.info(f"Queue is full, item discarded: {item}")
+
+
+q = create_bounded_queue(15)
+
+
+def add_to_bound_queue(item):
+    try:
+        q.put_nowait(item)  # 使用put_nowait来避免阻塞
+    except queue.Full:
+        logger.info(f"Queue is full, item discarded: {item}")
 
 
 class RateLimiter:
     def __init__(self, max_calls, period):
-        self.calls = max_calls
+        """
+        :param max_calls: 允许的最大调用次数
+        :param period: 时间窗口（秒）
+        """
+        self.max_calls = max_calls
         self.period = period
-        self.mtx = Lock()
-        self.timestamps = []
+        self.timestamps = deque()
 
-    def wait(self):
-        with self.mtx:
-            current_time = time.time()
-            # 清理超出时间窗口的时间戳
-            self.timestamps = [t for t in self.timestamps if current_time - t < self.period]
+    def allow_call(self):
+        """
+        检查是否允许当前调用
+        :return: True 如果允许, False 如果不允许
+        """
+        current_time = time.time()
 
-            if len(self.timestamps) >= self.calls:
-                earliest = self.timestamps[0]
-                sleep_time = self.period - (current_time - earliest)
-                #print(f"RateLimiter: Waiting for {sleep_time:.2f} seconds")
-                time.sleep(sleep_time)
+        # 移除时间窗口之外的旧时间戳
+        while self.timestamps and self.timestamps[0] < current_time - self.period:
+            self.timestamps.popleft()
 
-            self.timestamps.append(time.time())  # 添加新的时间戳
+        if len(self.timestamps) < self.max_calls:
+            self.timestamps.append(current_time)
+            return True
+        else:
+            return False
 
 
 webhook_url = "https://oapi.dingtalk.com/robot/send?access_token" \
@@ -39,25 +66,31 @@ webhook_url = "https://oapi.dingtalk.com/robot/send?access_token" \
 
 def send_dingtalk_message(q, limiter):
     while True:
-        message = q.get()
-        if message is None:
-            break  # 接收到None时，线程结束
+        try:
+            message = q.get(timeout=10)  # 10秒超时
+            if message is None:
+                time.sleep(1)  # 等待队列有元素
+                continue  # 接收到None时，线程结束
 
-        limiter.wait()  # 等待符合频率限制
-
-        headers = {"Content-Type": "application/json; charset=utf-8"}
-        data = {
-            "msgtype": "text",
-            "text": {
-                "content": "autobn---" + message  # 消息内容
-            },
-            "at": {
-                "isAtAll": False
-            }
-        }
-        response = requests.post(webhook_url, data=json.dumps(data), headers=headers)
-        logger.info(f"钉钉通知发送状态：{response.text}")
-        q.task_done()
+            if limiter.allow_call():
+                headers = {"Content-Type": "application/json; charset=utf-8"}
+                data = {
+                    "msgtype": "text",
+                    "text": {
+                        "content": "autobn---" + message  # 消息内容
+                    },
+                    "at": {
+                        "isAtAll": False
+                    }
+                }
+                response = requests.post(webhook_url, data=json.dumps(data), headers=headers)
+                logger.info(f"钉钉通知发送状态：{response.text}")
+                q.task_done()
+            else:
+                logger.info(f"达到限流器上限，Denied call at: {time.strftime('%X')}")
+        except queue.Empty:
+            logger.info("队列为空，等待消息。")
+            time.sleep(1)  # 等待队列有元素
 
 
 def on_message(ws, message):
@@ -70,15 +103,15 @@ def on_message(ws, message):
         if price_change_percent <= -20:
             alert_message = f"下跌警告下跌超过20%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
-            q.put(alert_message)  # 将消息放入队列
+            add_to_bound_queue(alert_message)  # 将消息放入队列
         elif price_change_percent <= -13:
             alert_message = f"下跌警告下跌超过13%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
-            q.put(alert_message)  # 将消息放入队列
+            add_to_bound_queue(alert_message)  # 将消息放入队列
         elif price_change_percent <= -10:
             alert_message = f"下跌警告下跌超过10%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
-            q.put(alert_message)  # 将消息放入队列
+            add_to_bound_queue(alert_message)  # 将消息放入队列
         # elif price_change_percent <= -10:
         #     alert_message = f"下跌警告下跌超过20%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
         #     logger.info(alert_message)
@@ -87,18 +120,22 @@ def on_message(ws, message):
         #     alert_message = f"下跌警告下跌超过7%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
         #     logger.info(alert_message)
         #     q.put(alert_message)  # 将消息放入队列
+        elif price_change_percent >= 20:
+            alert_message = f"很棒666,上涨超过20%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
+            logger.info(alert_message)
+            add_to_bound_queue(alert_message)  # 将消息放入队列
         elif price_change_percent >= 25:
             alert_message = f"很棒666,上涨超过25%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
-            q.put(alert_message)  # 将消息放入队列
+            add_to_bound_queue(alert_message)  # 将消息放入队列
         elif price_change_percent >= 28:
             alert_message = f"很棒666,上涨超过28%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
-            q.put(alert_message)  # 将消息放入队列
+            add_to_bound_queue(alert_message)  # 将消息放入队列
         elif price_change_percent >= 30:
             alert_message = f"很棒666,上涨超过30%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
-            q.put(alert_message)  # 将消息放入队列
+            add_to_bound_queue(alert_message)  # 将消息放入队列
 
 
 def start_thread_pool(q):
@@ -123,7 +160,8 @@ def on_open(ws):
     logger.info("WebSocket connection opened.")
     # 订阅多个交易对
     ws.send(json.dumps({'method': 'SUBSCRIBE',
-                        'params': ['btcusdt@ticker', 'ethusdt@ticker', 'pepeusdt@ticker', 'arkmusdt@ticker', 'fetusdt@ticker','flokiusdt@ticker',
+                        'params': ['btcusdt@ticker', 'ethusdt@ticker', 'pepeusdt@ticker', 'arkmusdt@ticker',
+                                   'fetusdt@ticker', 'flokiusdt@ticker',
                                    'wldusdt@ticker'], 'id': 111}))
 
 

@@ -8,7 +8,7 @@ import time
 from threading import Lock, Thread
 import requests
 from collections import deque
-
+from utils import time_utils
 logger = k15_strategy_logger.get_logger()
 
 
@@ -136,7 +136,7 @@ class K15Strategy:
                          f"触发了上界条件是upper_ratio > 0.05,这是向上狂拉了,启动售卖操作,coin={coin}, real_time={event_time}, "
                          f"upper_ratio={upper_ratio_percentage}, open_price={open_price}, close_price={close_price}")
 
-        if (open_price > close_price) and (lower_ratio < -0.03):
+        if (open_price > close_price) and (lower_ratio < -0.035):
             logger.info(
                 f"触发了下界条件是lower_ratio < -0.03,这是向下插强针了,启动购买操作,coin={coin}, real_time={event_time}, "
                 f"lower_ratio={lower_ratio_percentage}, open_price={open_price}, close_price={close_price}")
@@ -145,7 +145,7 @@ class K15Strategy:
                          f"触发了下界条件是lower_ratio < -0.03,这是向下插强针了,启动购买操作,coin={coin}, real_time={event_time}, "
                          f"lower_ratio={lower_ratio_percentage}, open_price={open_price}, close_price={close_price}")
 
-        if (open_price < close_price) and (upper_ratio > 0.03):
+        if (open_price < close_price) and (upper_ratio > 0.035):
             logger.info(
                 f"触发了上界条件是upper_ratio > 0.03,这是向上狂拉了,启动售卖操作,coin={coin}, real_time={event_time}, "
                 f"upper_ratio={upper_ratio_percentage}, open_price={open_price}, close_price={close_price}")
@@ -155,22 +155,24 @@ class K15Strategy:
                 f"upper_ratio={upper_ratio_percentage}, open_price={open_price}, close_price={close_price}")
 
         if (open_price > close_price) and (lower_ratio < -0.011):
-            logger.info(
-                f"触发了下界条件是lower_ratio < -0.011,这是向下插强针了,启动购买操作,coin={coin}, real_time={event_time}, "
-                f"lower_ratio={lower_ratio_percentage}, open_price={open_price}, close_price={close_price}")
+            if time_utils.is_between_8am_and_next_day_1230am():
+                logger.info(
+                    f"触发了下界条件是lower_ratio < -0.011,这是向下插强针了,启动购买操作,coin={coin}, real_time={event_time}, "
+                    f"lower_ratio={lower_ratio_percentage}, open_price={open_price}, close_price={close_price}")
 
-            add_to_queue(q,
-                         f"触发了下界条件是lower_ratio < -0.01,这是向下插强针了,启动购买操作,coin={coin}, real_time={event_time}, "
-                         f"lower_ratio={lower_ratio_percentage}, open_price={open_price}, close_price={close_price}")
+                add_to_queue(q,
+                             f"触发了下界条件是lower_ratio < -0.01,这是向下插强针了,启动购买操作,coin={coin}, real_time={event_time}, "
+                             f"lower_ratio={lower_ratio_percentage}, open_price={open_price}, close_price={close_price}")
 
         if (open_price < close_price) and (upper_ratio > 0.011):
-            logger.info(
-                f"触发了上界条件是upper_ratio > 0.011,这是向上狂拉了,启动售卖操作,coin={coin}, real_time={event_time}, "
-                f"upper_ratio={upper_ratio_percentage}, open_price={open_price}, close_price={close_price}")
+            if time_utils.is_between_8am_and_next_day_1230am():
+                logger.info(
+                    f"触发了上界条件是upper_ratio > 0.011,这是向上狂拉了,启动售卖操作,coin={coin}, real_time={event_time}, "
+                    f"upper_ratio={upper_ratio_percentage}, open_price={open_price}, close_price={close_price}")
 
-            q.put(
-                f"触发了上界条件是upper_ratio > 0.01,这是向上狂拉了,启动售卖操作,coin={coin}, real_time={event_time}, "
-                f"upper_ratio={upper_ratio_percentage}, open_price={open_price}, close_price={close_price}")
+                q.put(
+                    f"触发了上界条件是upper_ratio > 0.01,这是向上狂拉了,启动售卖操作,coin={coin}, real_time={event_time}, "
+                    f"upper_ratio={upper_ratio_percentage}, open_price={open_price}, close_price={close_price}")
 
         if (open_price > close_price) and (lower_ratio < -0.08):
             logger.info(

@@ -120,19 +120,19 @@ def on_message(ws, message):
         #     alert_message = f"下跌警告下跌超过7%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
         #     logger.info(alert_message)
         #     q.put(alert_message)  # 将消息放入队列
-        elif price_change_percent >= 20:
+        elif price_change_percent >= 25:
             alert_message = f"很棒666,上涨超过20%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
             add_to_bound_queue(alert_message)  # 将消息放入队列
-        elif price_change_percent >= 25:
+        elif price_change_percent >= 30:
             alert_message = f"很棒666,上涨超过25%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
             add_to_bound_queue(alert_message)  # 将消息放入队列
-        elif price_change_percent >= 28:
+        elif price_change_percent >= 35:
             alert_message = f"很棒666,上涨超过28%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
             add_to_bound_queue(alert_message)  # 将消息放入队列
-        elif price_change_percent >= 30:
+        elif price_change_percent >= 40:
             alert_message = f"很棒666,上涨超过30%！{coin} 24小时涨跌幅已达 {price_change_percent}%"
             logger.info(alert_message)
             add_to_bound_queue(alert_message)  # 将消息放入队列

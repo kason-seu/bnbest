@@ -240,7 +240,8 @@ def on_open(ws):
                 "flokiusdt@kline_15m",
                 "wldusdt@kline_15m",
                 "fetusdt@kline_15m",
-                "arkmusdt@kline_15m"
+                "arkmusdt@kline_15m",
+                "solusdt@kline_15m"
             ],
         "id": 3
     }

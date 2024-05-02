@@ -161,7 +161,7 @@ def on_open(ws):
     # 订阅多个交易对
     ws.send(json.dumps({'method': 'SUBSCRIBE',
                         'params': ['btcusdt@ticker', 'ethusdt@ticker', 'pepeusdt@ticker', 'arkmusdt@ticker',
-                                   'fetusdt@ticker', 'flokiusdt@ticker',
+                                   'fetusdt@ticker', 'flokiusdt@ticker', 'solusdt@ticker',
                                    'wldusdt@ticker'], 'id': 111}))
 
 

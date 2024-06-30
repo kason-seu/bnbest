@@ -1,6 +1,5 @@
 import datetime as dt
 import backtrader as bt
-from backtrader_binance.binance_store import BinanceStore
 from Strategy import StrategyJustPrintsOHLCVAndState  # Trading System
 from backtrader_binance import binance_store
 # Historical/new bars of ticker

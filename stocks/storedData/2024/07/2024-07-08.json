@@ -1,0 +1,38 @@
+{
+  "date": "2024-07-08",
+  "data": [
+    {
+      "lastYearRptDt": "6/29/2023",
+      "lastYearEPS": "$1.02",
+      "time": "time-pre-market",
+      "symbol": "GBX",
+      "name": "Greenbrier Companies, Inc. (The)",
+      "marketCap": "$1,550,320,961",
+      "fiscalQuarterEnding": "May/2024",
+      "epsForecast": "$1.08",
+      "noOfEsts": "2"
+    },
+    {
+      "lastYearRptDt": "N/A",
+      "lastYearEPS": "($0.45)",
+      "time": "time-not-supplied",
+      "symbol": "VOXX",
+      "name": "VOXX International Corporation",
+      "marketCap": "$76,643,129",
+      "fiscalQuarterEnding": "May/2024",
+      "epsForecast": "",
+      "noOfEsts": "2"
+    },
+    {
+      "lastYearRptDt": "7/10/2023",
+      "lastYearEPS": "($0.15)",
+      "time": "time-not-supplied",
+      "symbol": "IPA",
+      "name": "ImmunoPrecise Antibodies Ltd.",
+      "marketCap": "$26,052,107",
+      "fiscalQuarterEnding": "Apr/2024",
+      "epsForecast": "($0.10)",
+      "noOfEsts": "1"
+    }
+  ]
+}

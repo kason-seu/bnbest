@@ -1,0 +1,82 @@
+{
+  "date": "2024-07-05",
+  "data": [
+    {
+      "lastYearRptDt": "N/A",
+      "lastYearEPS": "N/A",
+      "time": "time-not-supplied",
+      "symbol": "ZGN",
+      "name": "Ermenegildo Zegna N.V.",
+      "marketCap": "$2,941,145,590",
+      "fiscalQuarterEnding": "Mar/2024",
+      "epsForecast": "",
+      "noOfEsts": "4"
+    },
+    {
+      "lastYearRptDt": "7/07/2023",
+      "lastYearEPS": "($0.77)",
+      "time": "time-not-supplied",
+      "symbol": "KALV",
+      "name": "KalVista Pharmaceuticals, Inc.",
+      "marketCap": "$508,368,966",
+      "fiscalQuarterEnding": "Apr/2024",
+      "epsForecast": "($0.70)",
+      "noOfEsts": "4"
+    },
+    {
+      "lastYearRptDt": "N/A",
+      "lastYearEPS": "N/A",
+      "time": "time-not-supplied",
+      "symbol": "SFWL",
+      "name": "Shengfeng Development Limited",
+      "marketCap": "$103,946,866",
+      "fiscalQuarterEnding": "Mar/2024",
+      "epsForecast": "",
+      "noOfEsts": "4"
+    },
+    {
+      "lastYearRptDt": "N/A",
+      "lastYearEPS": "N/A",
+      "time": "time-not-supplied",
+      "symbol": "TOPS",
+      "name": "TOP Ships Inc.",
+      "marketCap": "$51,026,952",
+      "fiscalQuarterEnding": "Mar/2024",
+      "epsForecast": "",
+      "noOfEsts": "4"
+    },
+    {
+      "lastYearRptDt": "N/A",
+      "lastYearEPS": "N/A",
+      "time": "time-not-supplied",
+      "symbol": "LICN",
+      "name": "Lichen China Limited",
+      "marketCap": "$38,690,000",
+      "fiscalQuarterEnding": "Mar/2024",
+      "epsForecast": "",
+      "noOfEsts": "4"
+    },
+    {
+      "lastYearRptDt": "N/A",
+      "lastYearEPS": "N/A",
+      "time": "time-not-supplied",
+      "symbol": "HKIT",
+      "name": "Hitek Global Inc.",
+      "marketCap": "$25,474,484",
+      "fiscalQuarterEnding": "Mar/2024",
+      "epsForecast": "",
+      "noOfEsts": "4"
+    },
+    {
+      "lastYearRptDt": "N/A",
+      "lastYearEPS": "($0.15)",
+      "time": "time-not-supplied",
+      "symbol": "LEDS",
+      "name": "SemiLEDS Corporation",
+      "marketCap": "$8,682,037",
+      "fiscalQuarterEnding": "May/2024",
+      "epsForecast": "",
+      "noOfEsts": "4"
+    }
+  ]
+}
